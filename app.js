@@ -1,65 +1,74 @@
-//connect the data to the drop down.
+d3.json("samples.json").then((belly_data) => {
+  var names = belly_data.names;
+  console.log(names);
 
-var names = Object.values("names");
-var metadata = Object.values("metadata");
-var id = Object.values(metadata.id);
+ var dropdownMenu = d3.select("#selDataset");
 
-d3.selectAll("#selDataset").on("change", getData);
+ belly_data.names.forEach(element => {
+   dropdownMenu.append("option").text(element).property("value", element)
+ });
 
 function getData() {
-  var dropdownMenu = d3.select("#selDataset");
   var dataset = dropdownMenu.property("value");
-  var belly_data = [];
+  console.log(belly_data.samples)
+  results = belly_data.samples.filter(sample => sample.id == dataset);
+  console.log(results);
+  var otu_ids = results[0].otu_ids;
+  var otu_labels = results[0].otu_labels;
+  console.log(otu_ids);
+  otu_ids.slice(0, 10);
+  var sample = results[0].sample_values;
 
-  if (dataset == belly_names) {
-    dataset = belly_names
-    updatePlotly(data);
-  };
+  var metadata = belly_data.metadata.find(sample => sample.id == dataset);
+  console.log(metadata);
 
-//this is the html for the drop down
-//<select id="selDataset" onchange="optionChanged(this.value)"></select>
-
-
-//import data and put it in a trace to plot it.
-
-belly_data.sort(function(a, b) {
-    return parseFloat(b.belly_data) - parseFloat(a.belly_data);
-  });
-
-  // Slice the first 10 objects for plotting
-  belly_data = belly_data.slice(0, 10);
-
-d3.json("samples.json").then((belly_data) => {
-  //  Create the Traces
-  var trace1 = {
-    x: belly_data.map(row => row.sample_values),
-    y: belly_data.map(row => row.otu_ids),
-    text: belly_data.map(row => row.otu_ids),
-    name: "Belly Button",
-    type: "bar",
-    orientation: "h"
-  }
-
-  var data1 = [trace1]
-
-  var trace2 = {
-    x: data.map(row => row.otu_ids),
-    y: data.map(row => row.sample_values),
-    text: data.map(row => row.otu_ids),
-    name: "Belly Button",
+  var traceBub = {
+    x: otu_ids,
+    y: sample,
+    text: sample,
+    name: "Belly Button Bubble Chart",
     mode: 'markers',
     marker: {
-      size: [40, 60, 80, 100]
+    size: [40, 60, 80, 100]
+    }
+  } 
+  var layoutBub = {
+    title: 'Marker Size',
+      showlegend: true,
+      height: 600,
+      width: 600
+    };
+  var traceBar = {
+    x: sample.slice(0,10),
+    y: otu_ids.slice(0, 10).map(otu_id => "OTU " + otu_id),
+    text: otu_labels.slice(0, 10),
+      name: "Belly Button",
+      type: "bar",
+      orientation: "h"
     }
 
-  var data2 = [trace2];
+    var layoutBar = {
+      title: "This is my bar chart",
+    }
 
-  var layout2 = {
-    title: 'Marker Size',
-    showlegend: false,
-    height: 600,
-    width: 600
-  };
+    var dataBar = [traceBar]
+    var dataBub = [traceBub];
+    Plotly.newPlot("bubble", dataBub, layoutBub);
+    Plotly.newPlot("bar", dataBar, layoutBar);
 
-Plotly.newPlot('bar', data1, layout1);
-Plotly.newPlot('bubble', data2, layout2);
+    d3.select("#metadata").html("")
+    d3.select("#metadata").append("p").text("ID: " + metadata.id);
+    d3.select("#metadata").append("p").text("Ethnicity: " + metadata.ethnicity);
+    d3.select("#metadata").append("p").text("Gender: " + metadata.gender);
+    d3.select("#metadata").append("p").text("Age: " + metadata.age);
+    d3.select("#metadata").append("p").text("Locaton: " + metadata.location);
+    d3.select("#metadata").append("p").text("BBtype: " + metadata.bbtype);
+    d3.select("#metadata").append("p").text("Wash Frequency: " + metadata.wfreq);
+    
+   };
+  
+  
+d3.selectAll("#selDataset").on("change", getData);
+
+
+});
