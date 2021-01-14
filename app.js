@@ -69,7 +69,7 @@ function getData() {
           steps: [
             { range: [0,1], color: "#ff0000" },
             { range: [1,2], color: "#ff9999" },
-            { range: [2,3], color: "#ffe6e6" },
+            { range: [2,3], color: "#ffcccc" },
             { range: [3,4], color: "#ffe6e6" },
             { range: [4,5], color: "#FFF0F5" },
             { range: [5,6], color: "#F0FFFF" },
