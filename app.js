@@ -22,6 +22,7 @@ function getData() {
   var metadata = belly_data.metadata.find(sample => sample.id == dataset);
   console.log(metadata);
 
+
   var traceBub = {
     x: otu_ids,
     y: sample,
