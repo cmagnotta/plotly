@@ -26,18 +26,18 @@ function getData() {
     x: otu_ids,
     y: sample,
     text: otu_labels,
+    showlegend: false,
     mode: 'markers',
     marker: {
-      color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-      opacity: [1, 0.8, 0.6, 0.4],
-      size: [40, 60, 80, 100]
+      color: ('rgb(17, 157, 255)'),
+      size: sample
     }
   } 
   var layoutBub = {
-    title: 'Bacteria Frequency',
+    title: 'OTU ID and Bacteria Values',
       showlegend: true,
       height: 600,
-      width: 600
+      width: 1200
     };
   var traceBar = {
     x: sample.slice(0,10),
@@ -45,6 +45,7 @@ function getData() {
     text: otu_labels.slice(0, 10),
       name: "Belly Button",
       type: "bar",
+      showlegend: false,
       orientation: "h"
     }
 
